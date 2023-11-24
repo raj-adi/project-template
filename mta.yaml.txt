@@ -1,0 +1,42 @@
+_schema-version: '2.0'
+ID: Z1A00_WebIDE_template
+description: null
+version: 1.0.0
+modules:
+  - name: Z1A00_WebIDE_template-db
+    type: hdb
+    path: db
+    requires:
+      - name: Z1A00_WebIDE_template-hdi
+        properties:
+          TARGET_CONTAINER: '~{service-name}'
+      - name: cross-container-db-service
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: logical-db-service
+          service: '~{cross-container-db-service-name}'
+      - name: cross-container-CONTAINER_NAME-service
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: logical-CONTAINER_NAME-service
+          service: '~{cross-container-CONTAINER_NAME-service-name}'
+resources:
+  - name: Z1A00_WebIDE_template-hdi
+    type: com.sap.xs.hdi-container
+    properties:
+      service-name: '${service-name}'
+    parameters:
+      config:
+        schema: Z1A00_WebIDE_template
+  - name: cross-container-db-service
+    parameters:
+      service-name: db-service
+    properties:
+      cross-container-db-service-name: '${service-name}'
+    type: org.cloudfoundry.existing-service
+  - name: cross-container-CONTAINER_NAME-service
+    parameters:
+      service-name: CONTAINER_NAME-hdi
+    properties:
+      cross-container-CONTAINER_NAME-service-name: '${service-name}'
+    type: org.cloudfoundry.existing-service
